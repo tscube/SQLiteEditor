@@ -17,14 +17,14 @@ namespace Sample1
         // JIT Profile を保存するディレクトリをユーザーのドキュメントフォルダに設定
         protected override void OnStartup(StartupEventArgs e)
         {
-            string profileRoot = System.IO.Path.Combine(
+            string appRoot = System.IO.Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                "JITProfiles");
-            if (!System.IO.Directory.Exists(profileRoot))
+                "Sample1");
+            if (!System.IO.Directory.Exists(appRoot))
             {
-                System.IO.Directory.CreateDirectory(profileRoot);
+                System.IO.Directory.CreateDirectory(appRoot);
             }
-            System.Runtime.ProfileOptimization.SetProfileRoot(profileRoot);
+            System.Runtime.ProfileOptimization.SetProfileRoot(appRoot);
             System.Runtime.ProfileOptimization.StartProfile("Sample1.jitprofile");
             base.OnStartup(e);
         }
