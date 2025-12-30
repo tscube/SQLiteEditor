@@ -1,50 +1,94 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Data;
 using System.Data.SQLite;
+using System.Reflection;
+using System.Windows;
 
-namespace Sample1
+namespace SQLiteEditor
 {
     internal class MainVM : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-        private void RaisePropertyChanged(string propertyName)
+        private void RaisePropertyChanged( string propertyName )
         {
-            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            this.PropertyChanged?.Invoke( this, new PropertyChangedEventArgs( propertyName ) );
         }
 
-        private const string Password = "pass";
-        private const string DataSource = "Sample1.db";
+        public string AppTitle { get; set; } = string.Empty;
 
-        public string SqlStmt { get; set; } = "select * from user where id = 1";
+        private string m_DbFilePath = string.Empty;    
+        public string DbFilePath
+        { 
+            get
+            {
+                return this.m_DbFilePath;
+            }
+            set
+            {
+                this.m_DbFilePath = value;
+                this.AppTitle = Assembly.GetExecutingAssembly().GetName().Name + " [" + ( string.IsNullOrEmpty( this.m_DbFilePath ) ? "DBファイル未指定" : this.m_DbFilePath ) + "]";
+                this.RaisePropertyChanged( nameof( this.AppTitle ) ); 
+            } 
+        }
+
+        public string Password { get; set; } = string.Empty;
+
+        public string SqlStmt { get; set; } = string.Empty;
 
         public DataView DataList { get; private set; } = new DataView();
 
-        public void Load()
+        public void Execute()
         {
-            string connectionString = new SQLiteConnectionStringBuilder()
+            if( !string.IsNullOrEmpty( this.DbFilePath ) && !string.IsNullOrEmpty( this.SqlStmt ) )
             {
-                DataSource = MainVM.DataSource,
-                Password = MainVM.Password,
-                SyncMode = SynchronizationModes.Off,
-                JournalMode = SQLiteJournalModeEnum.Wal,
-                BusyTimeout = 3000
-            }
-            .ToString();
-
-            using (var conn = new SQLiteConnection(connectionString))
-            {
-                conn.Open();
-                using (var cmd = new SQLiteCommand(this.SqlStmt, conn))
+                string connectionString = new SQLiteConnectionStringBuilder()
                 {
-                    using (var adapter = new SQLiteDataAdapter(cmd))
+                    DataSource = this.DbFilePath,
+                    Password = Properties.Settings.Default.Password,
+                    SyncMode = SynchronizationModes.Off,
+                    JournalMode = SQLiteJournalModeEnum.Wal,
+                    BusyTimeout = 3000
+                }
+                .ToString();
+
+                using( var conn = new SQLiteConnection( connectionString ) )
+                {
+                    try
                     {
-                        DataTable table = new DataTable();
-                        adapter.Fill(table);
-                        this.DataList = table.DefaultView;
-                        this.RaisePropertyChanged(nameof(this.DataList));
+                        conn.Open();
+                        using( var cmd = new SQLiteCommand( this.SqlStmt, conn ) )
+                        {
+                            using( var adapter = new SQLiteDataAdapter( cmd ) )
+                            {
+                                DataTable table = new DataTable();
+                                adapter.Fill( table );
+                                this.DataList = table.DefaultView;
+                                this.RaisePropertyChanged( nameof( this.DataList ) );
+                            }
+                        }
+                    }
+                    catch( Exception ex )
+                    {
+                        MessageBox.Show( ex.Message, Assembly.GetExecutingAssembly().GetName().Name );
                     }
                 }
             }
+        }
+
+        public void Load()
+        {
+            this.DbFilePath = Properties.Settings.Default.DbFilePath;
+
+            this.SqlStmt = Properties.Settings.Default.SqlStmt;
+            this.RaisePropertyChanged( nameof( this.SqlStmt ) );
+        }
+
+        public void Save()
+        {
+            Properties.Settings.Default.DbFilePath = this.DbFilePath;
+            Properties.Settings.Default.SqlStmt = this.SqlStmt;
+            Properties.Settings.Default.Save();
         }
 
     }

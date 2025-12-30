@@ -1,76 +1,117 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.Win32;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Interop;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
-namespace Sample1
+namespace SQLiteEditor
 {
-    /// <summary>
-    /// MainWindow.xaml の相互作用ロジック
-    /// </summary>
     public partial class MainWindow : Window
     {
-        /// <summary>
-        /// MainWindow クラスの新しいインスタンスを初期化し、アプリケーションウィンドウの主要なデータコンテキストを設定します。
-        /// </summary>
-        /// <remarks>このコンストラクタは `DataContext` を `MainVM` の新しいインスタンスに設定し、ウィンドウのコントロールでデータバインディングを有効にします。WPF アプリケーションでメインウィンドウを作成する際にこのコンストラクタを使用します。</remarks>
         public MainWindow()
         {
-            // デザイナー生成コードを初期化
             InitializeComponent();
 
-            // DataContext を MainVM の新しいインスタンスに設定
-            this.DataContext = new MainVM();
+            var vm = new MainVM();
+            vm.Load();
+
+            this.DataContext = vm;
         }
 
-        private void Shutdown_Click(object sender, RoutedEventArgs e)
+        private void Window_Loaded( object sender, RoutedEventArgs e )
+        {
+            this.SqlStmt.Focus();
+            Keyboard.Focus( this.SqlStmt );
+        }
+
+        private void Window_Closing( object sender, System.ComponentModel.CancelEventArgs e )
+        {
+            if( this.DataContext is MainVM vm )
+            {
+                vm.Save();
+            }
+
+            Application.Current.Shutdown();
+        }
+
+        private void Shutdown_Click( object sender, RoutedEventArgs e )
         {
             Application.Current.Shutdown();
         }
 
-        public int TabSize { get; set; } = 4;
-
-        private void TextBox_PreviewKeyDown(object sender, KeyEventArgs e)
+        private void SelectFilePath_Click( object sender, RoutedEventArgs e )
         {
-            if (e.Key == Key.Tab)
+            // ファイル選択ダイアログを開く
+            var openFileDialog = new OpenFileDialog();
+            if( openFileDialog.ShowDialog().Value )
             {
-                var textBox = (TextBox)sender;
+                if( this.DataContext is MainVM vm )
+                {
+                    vm.DbFilePath = openFileDialog.FileName;
+                }
+            }
 
-                int caret = textBox.CaretIndex;
+        }
 
-                // 現在の行頭からの位置を計算
-                int lineIndex = textBox.GetLineIndexFromCharacterIndex(caret);
-                int lineStart = textBox.GetCharacterIndexFromLineIndex(lineIndex);
-                int column = caret - lineStart;
-
-                // 次のタブ位置までのスペース数
-                int spaces = TabSize - (column % TabSize);
-                if (spaces == 0) spaces = TabSize;
-
-                textBox.Text = textBox.Text.Insert(caret, new string(' ', spaces));
-                textBox.CaretIndex = caret + spaces;
-
-                e.Handled = true; // 既定の Tab 動作を止める
+        private void ClearFilePath_Click( object sender, RoutedEventArgs e )
+        {
+            if( this.DataContext is MainVM vm )
+            {
+                vm.DbFilePath = string.Empty;
             }
         }
 
-        private void Execute_Click(object sender, RoutedEventArgs e)
+        private void Password_Click( object sender, RoutedEventArgs e )
         {
-            if ( this.DataContext is MainVM vm)
+            var inputWindow = new TextInputWindow();
+            inputWindow.Owner = this;
+            inputWindow.Input.Text = Properties.Settings.Default.Password;
+            if( inputWindow.ShowDialog().Value )
             {
-                vm.Load();
+                Properties.Settings.Default.Password = inputWindow.Input.Text;
+                Properties.Settings.Default.Save();
+            }
+        }
+
+        private void Execute_Click( object sender, RoutedEventArgs e )
+        {
+            if( this.DataContext is MainVM vm )
+            {
+                vm.Execute();
+            }
+        }
+
+        public int TabSize { get; set; } = 4;
+
+        private void SqlStmt_PreviewKeyDown( object sender, KeyEventArgs e )
+        {
+            if( Key.Enter == e.Key && Keyboard.Modifiers.HasFlag( ModifierKeys.Control ) )
+            {
+                if( this.DataContext is MainVM vm )
+                {
+                    vm.Execute();
+                }
+                e.Handled = true;
+            }
+            else if( Key.Tab == e.Key )
+            {
+                var textBox = (TextBox)sender;
+                int caret = textBox.CaretIndex;
+
+                int lineIndex = textBox.GetLineIndexFromCharacterIndex(caret);
+                int lineStart = textBox.GetCharacterIndexFromLineIndex(lineIndex);
+                int column = caret - lineStart;
+                int spaces = TabSize - (column % TabSize);
+                if( spaces == 0 ) { spaces = TabSize; }
+
+                textBox.Text = textBox.Text.Insert( caret, new string( ' ', spaces ) );
+                textBox.CaretIndex = caret + spaces;
+
+                e.Handled = true;
+            }
+            else
+            {
+                // Do nothing
             }
         }
 

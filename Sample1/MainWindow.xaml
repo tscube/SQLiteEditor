@@ -1,32 +1,41 @@
-﻿<Window x:Class="Sample1.MainWindow"
+﻿<Window x:Class="SQLiteEditor.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Sample1"
-        Height="450"
-        Width="800">
+        Title="{Binding Path=AppTitle}"
+        Height="600"
+        Width="800" WindowStartupLocation="CenterScreen"
+        Loaded="Window_Loaded"
+        Closing="Window_Closing">
 
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="200"/>
             <RowDefinition Height="5"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <!-- メニュー -->
         <Menu Grid.Row="0" Background="White">
-            <MenuItem Header="終了(_X)" Click="Shutdown_Click"/>
+            <MenuItem Header="ファイル(_F)">
+                <MenuItem Header="DBファイル選択(_S)" Click="SelectFilePath_Click"/>
+                <MenuItem Header="DBファイル解除(_C)" Click="ClearFilePath_Click"/>
+                <MenuItem Header="DBパスワード(_P)" Click="Password_Click"/>
+                <MenuItem Header="終了(_X)" Click="Shutdown_Click"/>
+            </MenuItem>
             <MenuItem Header="SQL実行(_E)" Click="Execute_Click"/>
         </Menu>
 
         <!-- SQL入力 -->
-        <TextBox Grid.Row="1" Text="{Binding Path=SqlStmt, UpdateSourceTrigger=PropertyChanged}"
+        <TextBox Grid.Row="1" x:Name="SqlStmt" Text="{Binding Path=SqlStmt, UpdateSourceTrigger=PropertyChanged}"
                  AcceptsReturn="True"
                  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
-                 FontFamily="MS Gothic"/>
+                 FontFamily="MS Gothic" Padding="5,5,0,0"
+                 PreviewKeyDown="SqlStmt_PreviewKeyDown"/>
 
         <!-- スプリッター -->
         <GridSplitter Grid.Row="2" Background="White"
@@ -35,6 +44,11 @@
 
         <!-- 結果表示 -->
         <DataGrid Grid.Row="3" ItemsSource="{Binding DataList}"
-                  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"/>
+                  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
+                  CanUserAddRows="False" 
+                  VerticalGridLinesBrush="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}"
+                  HorizontalGridLinesBrush="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" 
+                  />
+
     </Grid>
 </Window>

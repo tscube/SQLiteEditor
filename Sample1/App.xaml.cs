@@ -15,18 +15,18 @@ namespace Sample1
     {
         // JIT Profile Optimization を有効にするためのコード
         // JIT Profile を保存するディレクトリをユーザーのドキュメントフォルダに設定
-        protected override void OnStartup(StartupEventArgs e)
+        protected override void OnStartup( StartupEventArgs e )
         {
             string appRoot = System.IO.Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
                 "Sample1");
-            if (!System.IO.Directory.Exists(appRoot))
+            if( !System.IO.Directory.Exists( appRoot ) )
             {
-                System.IO.Directory.CreateDirectory(appRoot);
+                System.IO.Directory.CreateDirectory( appRoot );
             }
-            System.Runtime.ProfileOptimization.SetProfileRoot(appRoot);
-            System.Runtime.ProfileOptimization.StartProfile("Sample1.jitprofile");
-            base.OnStartup(e);
+            System.Runtime.ProfileOptimization.SetProfileRoot( appRoot );
+            System.Runtime.ProfileOptimization.StartProfile( "Sample1.jitprofile" );
+            base.OnStartup( e );
         }
     }
 }
