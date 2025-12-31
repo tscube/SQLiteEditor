@@ -17,6 +17,8 @@ namespace SQLiteEditor
 
         public string AppTitle { get; set; } = string.Empty;
 
+        public string StatusMessage { get; set; } = string.Empty;
+
         private string m_DbFilePath = string.Empty;    
         public string DbFilePath
         { 
@@ -32,14 +34,14 @@ namespace SQLiteEditor
             } 
         }
 
-        public string Password { get; set; } = string.Empty;
-
         public string SqlStmt { get; set; } = string.Empty;
 
         public DataView DataList { get; private set; } = new DataView();
 
         public void Execute()
         {
+            this.StatusMessage = string.Empty;
+
             if( !string.IsNullOrEmpty( this.DbFilePath ) && !string.IsNullOrEmpty( this.SqlStmt ) )
             {
                 string connectionString = new SQLiteConnectionStringBuilder()
@@ -59,12 +61,30 @@ namespace SQLiteEditor
                         conn.Open();
                         using( var cmd = new SQLiteCommand( this.SqlStmt, conn ) )
                         {
-                            using( var adapter = new SQLiteDataAdapter( cmd ) )
+                            bool isQuery = false;
+                            using( var reader = cmd.ExecuteReader() )
                             {
-                                DataTable table = new DataTable();
-                                adapter.Fill( table );
-                                this.DataList = table.DefaultView;
-                                this.RaisePropertyChanged( nameof( this.DataList ) );
+                                isQuery = reader.HasRows;
+                            }
+
+                            if( isQuery )
+                            {
+                                /* SQLがクエリーステートメントの場合 */
+                                using( var adapter = new SQLiteDataAdapter( cmd ) )
+                                {
+                                    DataTable table = new DataTable();
+                                    int result = adapter.Fill( table );
+                                    this.StatusMessage = $"取得件数: {result} 件";
+ 
+                                    this.DataList = table.DefaultView;
+                                    this.RaisePropertyChanged( nameof( this.DataList ) );
+                                }
+                            }
+                            else
+                            {
+                                /* SQLが非クエリーステートメントの場合 */
+                                int result = cmd.ExecuteNonQuery();
+                                this.StatusMessage = $"影響件数: {result} 件";
                             }
                         }
                     }
@@ -74,6 +94,8 @@ namespace SQLiteEditor
                     }
                 }
             }
+
+            this.RaisePropertyChanged( nameof( this.StatusMessage ) );
         }
 
         public void Load()

@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace Sample1
+namespace SQLiteEditor
 {
     /// <summary>
     /// App.xaml の相互作用ロジック
@@ -17,15 +18,14 @@ namespace Sample1
         // JIT Profile を保存するディレクトリをユーザーのドキュメントフォルダに設定
         protected override void OnStartup( StartupEventArgs e )
         {
-            string appRoot = System.IO.Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                "Sample1");
+            string appName = Assembly.GetExecutingAssembly().GetName().Name;
+            string appRoot = System.IO.Path.Combine( Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), appName);
             if( !System.IO.Directory.Exists( appRoot ) )
             {
                 System.IO.Directory.CreateDirectory( appRoot );
             }
             System.Runtime.ProfileOptimization.SetProfileRoot( appRoot );
-            System.Runtime.ProfileOptimization.StartProfile( "Sample1.jitprofile" );
+            System.Runtime.ProfileOptimization.StartProfile( appName + ".jitprofile" );
             base.OnStartup( e );
         }
     }

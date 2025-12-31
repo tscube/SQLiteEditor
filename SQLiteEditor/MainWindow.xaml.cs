@@ -1,5 +1,4 @@
 ﻿using Microsoft.Win32;
-using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -8,37 +7,75 @@ namespace SQLiteEditor
 {
     public partial class MainWindow : Window
     {
+        public static int WindowCount = 0;
+
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
         public MainWindow()
         {
+            /* ウインドウ数カウントアップ */
+            MainWindow.WindowCount++;
+
             InitializeComponent();
 
+            /* 設定読み込み */
             var vm = new MainVM();
             vm.Load();
-
             this.DataContext = vm;
         }
 
+        /// <summary>
+        /// ウインドウ起動時の処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Window_Loaded( object sender, RoutedEventArgs e )
         {
+            this.PasswordMenu.IsChecked = !string.IsNullOrEmpty( Properties.Settings.Default.Password );
+
             this.SqlStmt.Focus();
             Keyboard.Focus( this.SqlStmt );
         }
 
+        /// <summary>
+        /// ウインドウ終了時の処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Window_Closing( object sender, System.ComponentModel.CancelEventArgs e )
         {
-            if( this.DataContext is MainVM vm )
-            {
-                vm.Save();
-            }
 
-            Application.Current.Shutdown();
+            if( 0 >= --MainWindow.WindowCount )
+            {
+                /* 最後のウインドウが閉じられた時 */
+
+                /* 設定保存 */
+                if( this.DataContext is MainVM vm )
+                {
+                    vm.Save();
+                }
+
+                /* アプリケーション終了 */
+                Application.Current.Shutdown();
+            }
         }
 
+        /// <summary>
+        /// 終了メニュークリック時の処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Shutdown_Click( object sender, RoutedEventArgs e )
         {
-            Application.Current.Shutdown();
+            this.Close();
         }
 
+        /// <summary>
+        /// DBファイル選択メニュークリック時の処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void SelectFilePath_Click( object sender, RoutedEventArgs e )
         {
             // ファイル選択ダイアログを開く
@@ -53,6 +90,11 @@ namespace SQLiteEditor
 
         }
 
+        /// <summary>
+        /// DBファイルパスクリアメニュークリック時の処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ClearFilePath_Click( object sender, RoutedEventArgs e )
         {
             if( this.DataContext is MainVM vm )
@@ -61,6 +103,11 @@ namespace SQLiteEditor
             }
         }
 
+        /// <summary>
+        /// DBパスワード設定メニュークリック時の処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Password_Click( object sender, RoutedEventArgs e )
         {
             var inputWindow = new TextInputWindow();
@@ -70,9 +117,16 @@ namespace SQLiteEditor
             {
                 Properties.Settings.Default.Password = inputWindow.Input.Text;
                 Properties.Settings.Default.Save();
+
+                this.PasswordMenu.IsChecked = !string.IsNullOrEmpty( Properties.Settings.Default.Password );
             }
         }
 
+        /// <summary>
+        /// SQL実行ボタンクリック時の処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Execute_Click( object sender, RoutedEventArgs e )
         {
             if( this.DataContext is MainVM vm )
@@ -81,12 +135,39 @@ namespace SQLiteEditor
             }
         }
 
+        /// <summary>
+        /// 新規ウィンドウメニュークリック時の処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void NewWindow_Click( object sender, RoutedEventArgs e )
+        {
+            // 新しいウィンドウを開く
+            var newWindow = new MainWindow
+            {
+                WindowStartupLocation = WindowStartupLocation.Manual,
+                Left = this.Left + 30,
+                Top  = this.Top  + 30
+            };
+
+            newWindow.Show();
+        }
+
+        /// <summary>
+        /// SQLエディタ入力時のタブサイズ指定
+        /// </summary>
         public int TabSize { get; set; } = 4;
 
+        /// <summary>
+        /// SQLエディタの特定キー押下時の処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void SqlStmt_PreviewKeyDown( object sender, KeyEventArgs e )
         {
             if( Key.Enter == e.Key && Keyboard.Modifiers.HasFlag( ModifierKeys.Control ) )
             {
+                /* Ctrl + Enter */
                 if( this.DataContext is MainVM vm )
                 {
                     vm.Execute();
@@ -95,6 +176,7 @@ namespace SQLiteEditor
             }
             else if( Key.Tab == e.Key )
             {
+                /* Tab */
                 var textBox = (TextBox)sender;
                 int caret = textBox.CaretIndex;
 
