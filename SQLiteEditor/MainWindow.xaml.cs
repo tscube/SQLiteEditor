@@ -112,10 +112,10 @@ namespace SQLiteEditor
         {
             var inputWindow = new TextInputWindow();
             inputWindow.Owner = this;
-            inputWindow.Input.Text = Properties.Settings.Default.Password;
+            inputWindow.Input.Password = Properties.Settings.Default.Password;
             if( inputWindow.ShowDialog().Value )
             {
-                Properties.Settings.Default.Password = inputWindow.Input.Text;
+                Properties.Settings.Default.Password = inputWindow.Input.Password;
                 Properties.Settings.Default.Save();
 
                 this.PasswordMenu.IsChecked = !string.IsNullOrEmpty( Properties.Settings.Default.Password );

@@ -22,8 +22,11 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Label Grid.Row="0" Grid.Column="0" Content="Enter Password:" VerticalAlignment="Center" FontSize="15"/>
-            <TextBox Grid.Row="0" Grid.Column="1"  x:Name="Input" VerticalAlignment="Center" HorizontalAlignment="Stretch" PreviewKeyUp="Input_PreviewKeyUp" MinWidth="225" FontSize="15"/>
-            <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Content="( Press Enter to confirm, Esc to cancel )" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="15"/>
+            <PasswordBox Grid.Row="0" Grid.Column="1"  x:Name="Input" VerticalAlignment="Center" HorizontalAlignment="Stretch" PreviewKeyUp="Input_PreviewKeyUp" MinWidth="225" FontSize="15"/>
+            <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button x:Name="OkButton" Content="OK" Width="75" Margin="5" Click="OkButton_Click" Padding="5,0,5,0"/>
+                <Button x:Name="CancelButton" Content="キャンセル" Width="75" Margin="5" Click="CancelButton_Click" Padding="5,0,5,0"/>
+            </StackPanel>
         </Grid>
     </Border>
 </Window>

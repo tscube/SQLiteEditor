@@ -29,7 +29,7 @@ namespace SQLiteEditor
             set
             {
                 this.m_DbFilePath = value;
-                this.AppTitle = Assembly.GetExecutingAssembly().GetName().Name + " [" + ( string.IsNullOrEmpty( this.m_DbFilePath ) ? "DBファイル未指定" : this.m_DbFilePath ) + "]";
+                this.AppTitle = Assembly.GetExecutingAssembly().GetName().Name + " v" + Assembly.GetExecutingAssembly().GetName().Version + " [" + ( string.IsNullOrEmpty( this.m_DbFilePath ) ? "DBファイル未指定" : this.m_DbFilePath ) + "]";
                 this.RaisePropertyChanged( nameof( this.AppTitle ) ); 
             } 
         }
