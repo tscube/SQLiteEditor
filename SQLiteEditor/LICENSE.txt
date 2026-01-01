@@ -1,0 +1,17 @@
+CC0 1.0 Universal (CC0 1.0)
+Public Domain Dedication
+
+This software is released into the public domain under CC0 1.0.
+
+You are free to:
+- Use the software for any purpose
+- Modify it
+- Distribute it
+- Use it commercially
+
+No permission is required.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
+
+For more information:
+https://creativecommons.org/publicdomain/zero/1.0/
