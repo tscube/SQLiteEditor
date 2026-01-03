@@ -38,11 +38,13 @@ namespace SQLiteEditor
 
         public DataView DataList { get; private set; } = new DataView();
 
-        public void Execute()
+        public void Execute( string sqlStmt = "" )
         {
             this.StatusMessage = string.Empty;
 
-            if( !string.IsNullOrEmpty( this.DbFilePath ) && !string.IsNullOrEmpty( this.SqlStmt ) )
+            sqlStmt = string.IsNullOrEmpty( sqlStmt ) ? this.SqlStmt : sqlStmt;
+
+            if( !string.IsNullOrEmpty( this.DbFilePath ) && !string.IsNullOrEmpty( sqlStmt ) )
             {
                 string connectionString = new SQLiteConnectionStringBuilder()
                 {
@@ -59,7 +61,7 @@ namespace SQLiteEditor
                     try
                     {
                         conn.Open();
-                        using( var cmd = new SQLiteCommand( this.SqlStmt, conn ) )
+                        using( var cmd = new SQLiteCommand( sqlStmt, conn ) )
                         {
                             bool isQuery = false;
                             using( var reader = cmd.ExecuteReader() )

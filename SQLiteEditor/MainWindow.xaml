@@ -27,8 +27,9 @@
                 <MenuItem Header="DBパスワード(_P)" Click="Password_Click" x:Name="PasswordMenu"/>
                 <MenuItem Header="終了(_X)" Click="Shutdown_Click"/>
             </MenuItem>
-            <MenuItem Header="SQL実行(_E)" Click="Execute_Click"/>
             <MenuItem Header="新規ウインドウ(_N)" Click="NewWindow_Click"/>
+            <MenuItem Header="テーブル一覧(_L)" Click="ShowTableList_Click"/>
+            <MenuItem Header="SQL実行(_E)" Click="Execute_Click"/>
         </Menu>
 
         <!-- SQL入力 -->

@@ -136,6 +136,19 @@ namespace SQLiteEditor
         }
 
         /// <summary>
+        /// テーブル一覧表示メニュークリック時の処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ShowTableList_Click( object sender, RoutedEventArgs e )
+        {
+            if( this.DataContext is MainVM vm )
+            {
+                vm.Execute( "select name from sqlite_master where type = 'table' and name not like 'sqlite_%' order by name;" );
+            }
+        }
+
+        /// <summary>
         /// 新規ウィンドウメニュークリック時の処理
         /// </summary>
         /// <param name="sender"></param>
