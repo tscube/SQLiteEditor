@@ -3,7 +3,9 @@ using System.ComponentModel;
 using System.Data;
 using System.Data.SQLite;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Windows;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace SQLiteEditor
 {
@@ -18,6 +20,8 @@ namespace SQLiteEditor
         public string AppTitle { get; set; } = string.Empty;
 
         public string StatusMessage { get; set; } = string.Empty;
+
+        public string SqlExecuted { get; set; } = string.Empty;
 
         private string m_DbFilePath = string.Empty;    
         public string DbFilePath
@@ -43,6 +47,7 @@ namespace SQLiteEditor
             this.StatusMessage = string.Empty;
 
             sqlStmt = string.IsNullOrEmpty( sqlStmt ) ? this.SqlStmt : sqlStmt;
+            this.SqlExecuted = " \"" + Regex.Replace( sqlStmt, @"\r\n|\r|\n", " " ).Trim() + "\"";
 
             if( !string.IsNullOrEmpty( this.DbFilePath ) && !string.IsNullOrEmpty( sqlStmt ) )
             {
@@ -98,6 +103,7 @@ namespace SQLiteEditor
             }
 
             this.RaisePropertyChanged( nameof( this.StatusMessage ) );
+            this.RaisePropertyChanged( nameof( this.SqlExecuted ) );
         }
 
         public void Load()

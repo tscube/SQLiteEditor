@@ -144,7 +144,30 @@ namespace SQLiteEditor
         {
             if( this.DataContext is MainVM vm )
             {
-                vm.Execute( "select name from sqlite_master where type = 'table' and name not like 'sqlite_%' order by name;" );
+                vm.Execute( "select tbl_name from sqlite_master where type = 'table' and tbl_name not like 'sqlite_%' order by tbl_name;" );
+            }
+        }
+        private void ShowTableDefinitions_Click( object sender, RoutedEventArgs e )
+        {
+            if( this.DataContext is MainVM vm )
+            {
+                vm.Execute( "select tbl_name, sql from sqlite_master where type in ( 'table', 'index' ) and tbl_name not like 'sqlite_%' order by tbl_name;" );
+            }
+        }
+
+        private void ShowTriggerList_Click( object sender, RoutedEventArgs e )
+        {
+            if( this.DataContext is MainVM vm )
+            {
+                vm.Execute( "select tbl_name, name from sqlite_master where type = 'trigger' and tbl_name not like 'sqlite_%' order by tbl_name, name;" );
+            }
+        }
+
+        private void ShowTriggerDefinitions_Click( object sender, RoutedEventArgs e )
+        {
+            if( this.DataContext is MainVM vm )
+            {
+                vm.Execute( "select tbl_name, name, sql from sqlite_master where type = 'trigger' and tbl_name not like 'sqlite_%' order by tbl_name, name;" );
             }
         }
 
