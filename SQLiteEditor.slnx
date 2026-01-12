@@ -1,3 +1,6 @@
 <Solution>
+  <Folder Name="/lib/">
+    <File Path="lib/System.Data.SQLite.dll" />
+  </Folder>
   <Project Path="SQLiteEditor/SQLiteEditor.csproj" Id="a61ee9c3-2965-48ff-a95b-f54da269869d" />
 </Solution>
