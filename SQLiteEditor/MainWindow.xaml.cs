@@ -1,4 +1,8 @@
-﻿using Microsoft.Win32;
+﻿// ※ コメントは必ず日本語で記述すること
+
+using Microsoft.Win32;
+using System;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -78,16 +82,56 @@ namespace SQLiteEditor
         /// <param name="e"></param>
         private void SelectFilePath_Click( object sender, RoutedEventArgs e )
         {
-            // ファイル選択ダイアログを開く
-            var openFileDialog = new OpenFileDialog();
-            if( openFileDialog.ShowDialog().Value )
+            if( this.DataContext is MainVM vm )
             {
-                if( this.DataContext is MainVM vm )
+                // ファイル選択ダイアログの初期ディレクトリを設定する
+                var openFileDialog = new OpenFileDialog()
+                {
+                    InitialDirectory = this.GetExistPath( vm.DbFilePath )
+                };            
+
+                // ファイル選択ダイアログを開く
+                if( openFileDialog.ShowDialog().Value )
                 {
                     vm.DbFilePath = openFileDialog.FileName;
                 }
             }
+        }
 
+        /// <summary>
+        /// 指定されたファイルパスまたは存在する親ディレクトリのパスを取得する
+        /// </summary>
+        /// <param name="filePath">ファイルパス</param>
+        /// <returns>指定されたファイルパスまたは存在する親ディレクトリのパス</returns>
+        private string GetExistPath( string filePath )
+        {
+            if( File.Exists( filePath ) )
+            {
+                // ファイルが存在する場合はそのまま返す
+                return filePath;
+            }
+            else if( string.IsNullOrEmpty( filePath ) )
+            {
+                // ファイルパスが空の場合はデスクトップを返す
+                return Environment.GetFolderPath( Environment.SpecialFolder.Desktop ); ;
+            }
+            else
+            {
+                // ファイルが存在しない場合は存在する親ディレクトリを返す
+                string parentDir = Path.GetDirectoryName( filePath );
+                while( !Directory.Exists( parentDir ) )
+                {
+                    parentDir = Directory.GetParent( parentDir ).FullName;
+
+                    // ルートディレクトリまで到達した場合はデスクトップを返す
+                    if( string.IsNullOrEmpty( parentDir ) )
+                    {
+                        parentDir = Environment.GetFolderPath( Environment.SpecialFolder.Desktop ); ;
+                        break;
+                    }
+                }
+                return parentDir;
+            }
         }
 
         /// <summary>
@@ -131,7 +175,23 @@ namespace SQLiteEditor
         {
             if( this.DataContext is MainVM vm )
             {
-                vm.Execute();
+                if( File.Exists( vm.DbFilePath ) )
+                {
+                    vm.Execute();
+                }
+                else
+                {
+                    if( string.IsNullOrEmpty( vm.DbFilePath ) )
+                    {
+                        MessageBox.Show( "DBファイルが指定されていません。", "エラー", MessageBoxButton.OK, MessageBoxImage.Error );
+                        vm.StatusMessage = "DBファイルが指定されていません。";
+                    }
+                    else
+                    {
+                        MessageBox.Show( "指定されたDBファイルが存在しません。", "エラー", MessageBoxButton.OK, MessageBoxImage.Error );
+                        vm.StatusMessage = "指定されたDBファイルが存在しません。";
+                    }
+                }
             }
         }
 
@@ -187,6 +247,9 @@ namespace SQLiteEditor
             };
 
             newWindow.Show();
+
+            // 新しいウィンドウのSQLエディタを空にする
+            newWindow.SqlStmt.Clear();
         }
 
         /// <summary>
