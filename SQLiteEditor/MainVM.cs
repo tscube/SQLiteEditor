@@ -2,10 +2,10 @@
 using System.ComponentModel;
 using System.Data;
 using System.Data.SQLite;
+using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Windows;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace SQLiteEditor
 {
@@ -44,6 +44,22 @@ namespace SQLiteEditor
 
         public void Execute( string sqlStmt = "" )
         {
+            // DBファイルの存在チェック
+            if( !File.Exists( this.DbFilePath ) )
+            {
+                if( string.IsNullOrEmpty( this.DbFilePath ) )
+                {
+                    MessageBox.Show( "DBファイルが指定されていません。", "エラー", MessageBoxButton.OK, MessageBoxImage.Error );
+                    this.StatusMessage = "DBファイルが指定されていません。";
+                }
+                else
+                {
+                    MessageBox.Show( "指定されたDBファイルが存在しません。", "エラー", MessageBoxButton.OK, MessageBoxImage.Error );
+                    this.StatusMessage = "指定されたDBファイルが存在しません。";
+                }
+                return;
+            }
+
             this.StatusMessage = string.Empty;
 
             sqlStmt = string.IsNullOrEmpty( sqlStmt ) ? this.SqlStmt : sqlStmt;

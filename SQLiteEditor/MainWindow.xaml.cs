@@ -175,23 +175,7 @@ namespace SQLiteEditor
         {
             if( this.DataContext is MainVM vm )
             {
-                if( File.Exists( vm.DbFilePath ) )
-                {
-                    vm.Execute();
-                }
-                else
-                {
-                    if( string.IsNullOrEmpty( vm.DbFilePath ) )
-                    {
-                        MessageBox.Show( "DBファイルが指定されていません。", "エラー", MessageBoxButton.OK, MessageBoxImage.Error );
-                        vm.StatusMessage = "DBファイルが指定されていません。";
-                    }
-                    else
-                    {
-                        MessageBox.Show( "指定されたDBファイルが存在しません。", "エラー", MessageBoxButton.OK, MessageBoxImage.Error );
-                        vm.StatusMessage = "指定されたDBファイルが存在しません。";
-                    }
-                }
+                vm.Execute();
             }
         }
 
