@@ -222,6 +222,13 @@ namespace SQLiteEditor
         /// <param name="e"></param>
         private void NewWindow_Click( object sender, RoutedEventArgs e )
         {
+            // 現在のウィンドウの設定を保存
+            if( this.DataContext is MainVM vm )
+            {
+                // 設定保存
+                vm.Save();
+            }
+
             // 新しいウィンドウを開く
             var newWindow = new MainWindow
             {
