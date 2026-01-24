@@ -3,9 +3,11 @@
 using Microsoft.Win32;
 using System;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Interop;
 
 namespace SQLiteEditor
 {
@@ -22,6 +24,7 @@ namespace SQLiteEditor
             MainWindow.WindowCount++;
 
             InitializeComponent();
+            MouseLeftButtonDown += ( _, __ ) => { DragMove(); };
 
             /* 設定読み込み */
             var vm = new MainVM();
@@ -63,6 +66,22 @@ namespace SQLiteEditor
                 /* アプリケーション終了 */
                 Application.Current.Shutdown();
             }
+        }
+
+        private void MaximizeClick( object sender, RoutedEventArgs e )
+        {
+            if( WindowState == WindowState.Maximized )
+                WindowState = WindowState.Normal;
+            else
+                WindowState = WindowState.Maximized;
+        }
+        private void CloseClick( object sender, RoutedEventArgs e )
+        {
+            Close();
+        }
+        private void MinimizeClick( object sender, RoutedEventArgs e )
+        {
+            WindowState = WindowState.Minimized;
         }
 
         /// <summary>

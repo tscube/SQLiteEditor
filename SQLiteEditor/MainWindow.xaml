@@ -7,11 +7,13 @@
         Title="{Binding Path=AppTitle}"
         Height="600"
         Width="800" WindowStartupLocation="CenterScreen"
+        WindowStyle="None" AllowsTransparency="True" Background="#CFFFFFFF" BorderThickness="1" BorderBrush="LightGray" ResizeMode="CanResizeWithGrip"
         Loaded="Window_Loaded"
         Closing="Window_Closing">
 
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="200"/>
             <RowDefinition Height="5"/>
@@ -19,8 +21,21 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="45"/>
+                <ColumnDefinition Width="45"/>
+                <ColumnDefinition Width="45"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Padding="5,0" Text="{Binding Path=AppTitle}"/>
+            <Button Grid.Column="1" Click="MinimizeClick" Background="Transparent" Foreground="Gray" BorderBrush="Transparent" Content="ー"/>
+            <Button Grid.Column="2" Click="MaximizeClick" Background="Transparent" Foreground="Gray" BorderBrush="Transparent" Content="□"/>
+            <Button Grid.Column="3" Click="CloseClick" Background="Transparent" Foreground="Gray" BorderBrush="Transparent" Content="✕"/>
+        </Grid>
+        
         <!-- メニュー -->
-        <Menu Grid.Row="0" Background="White">
+        <Menu Grid.Row="1" Background="White">
             <MenuItem Header="ファイル(_F)">
                 <MenuItem Header="DBファイル指定(_S)" Click="SelectFilePath_Click"/>
                 <MenuItem Header="DBファイル指定解除(_C)" Click="ClearFilePath_Click"/>
@@ -39,20 +54,24 @@
         </Menu>
 
         <!-- SQL入力 -->
-        <TextBox Grid.Row="1" x:Name="SqlStmt" Text="{Binding Path=SqlStmt, UpdateSourceTrigger=PropertyChanged}"
+        <TextBox Grid.Row="2" x:Name="SqlStmt" Text="{Binding Path=SqlStmt, UpdateSourceTrigger=PropertyChanged}"
                  AcceptsReturn="True"
                  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
                  FontFamily="MS Gothic" Padding="5,5,0,0"
+                 Background="Transparent" Foreground="Black" FontSize="14"
                  PreviewKeyDown="SqlStmt_PreviewKeyDown"/>
 
         <!-- スプリッター -->
-        <GridSplitter Grid.Row="2" Background="White"
+        <GridSplitter Grid.Row="3" Background="White"
                       Height="5" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
                       ResizeDirection="Rows"/>
 
         <!-- 結果表示 -->
-        <DataGrid Grid.Row="3" ItemsSource="{Binding DataList}"
+        <DataGrid Grid.Row="4" ItemsSource="{Binding DataList}"
                   VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
+                  Background="Transparent"
+                  RowBackground="Transparent"
+                  Foreground="Black"
                   CanUserAddRows="False" 
                   AutoGenerateColumns="True"
                   VerticalGridLinesBrush="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}"
@@ -67,12 +86,13 @@
                             </DataTemplate>
                         </Setter.Value>
                     </Setter>
+                    <Setter Property="Background" Value="Transparent"/>
                 </Style>
             </DataGrid.ColumnHeaderStyle>
         </DataGrid>
 
         <!-- ステータスバー -->
-        <StatusBar Grid.Row="4" Background="White">
+        <StatusBar Grid.Row="5" Background="Transparent">
             <StatusBarItem>
                 <TextBlock Text="{Binding Path=StatusMessage}"/>
             </StatusBarItem>
