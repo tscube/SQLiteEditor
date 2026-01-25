@@ -4,6 +4,7 @@ using Microsoft.Win32;
 using System;
 using System.Drawing;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -55,8 +56,19 @@ namespace SQLiteEditor
         /// <param name="e"></param>
         private void Window_Loaded( object sender, RoutedEventArgs e )
         {
+            /* ウインドウの角を丸くして影を付ける */
+            var hwnd = new WindowInteropHelper(this).Handle;
+            int corner = (int)DwmWindowCornerPreference.Round;
+            DwmSetWindowAttribute(
+                hwnd,
+                DWMWINDOWATTRIBUTE.DWMWA_WINDOW_CORNER_PREFERENCE,
+                ref corner,
+                sizeof( int ) );
+
+            /* パスワードメニューのチェック状態設定 */
             this.PasswordMenu.IsChecked = !string.IsNullOrEmpty( Properties.Settings.Default.Password );
 
+            /* SQLエディタにフォーカス設定 */
             this.SqlStmt.Focus();
             Keyboard.Focus( this.SqlStmt );
         }
@@ -391,6 +403,37 @@ namespace SQLiteEditor
                 this.MaximizeButton.Foreground = System.Windows.Media.Brushes.Black;
                 this.CloseButton.Foreground = System.Windows.Media.Brushes.Black;
             }
+        }
+
+
+        [DllImport( "dwmapi.dll" )]
+        private static extern int DwmSetWindowAttribute(
+            IntPtr hwnd,
+            DWMWINDOWATTRIBUTE attribute,
+            ref int pvAttribute,
+            int cbAttribute );
+
+        private enum DWMWINDOWATTRIBUTE
+        {
+            DWMWA_SYSTEMBACKDROP_TYPE = 38,
+            DWMWA_WINDOW_CORNER_PREFERENCE = 33
+        }
+
+        private enum DwmSystemBackdropType
+        {
+            Auto = 0,
+            None = 1,
+            Mica = 2,
+            Acrylic = 3,
+            MicaAlt = 4
+        }
+
+        private enum DwmWindowCornerPreference
+        {
+            Default = 0,
+            DoNotRound = 1,
+            Round = 2,
+            RoundSmall = 3
         }
 
     }
