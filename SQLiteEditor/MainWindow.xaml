@@ -23,15 +23,18 @@
 
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="45"/>
                 <ColumnDefinition Width="45"/>
                 <ColumnDefinition Width="45"/>
             </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="0" Padding="5,0" Text="{Binding Path=AppTitle}"/>
-            <Button Grid.Column="1" Click="MinimizeClick" Background="Transparent" Foreground="Gray" BorderBrush="Transparent" Content="ー" x:Name="MinimizeButton"/>
-            <Button Grid.Column="2" Click="MaximizeClick" Background="Transparent" Foreground="Gray" BorderBrush="Transparent" Content="□" x:Name="MaximizeButton"/>
-            <Button Grid.Column="3" Click="CloseClick" Background="Transparent" Foreground="Gray" BorderBrush="Transparent" Content="✕" x:Name="CloseButton"/>
+            <Image Grid.Column="0" Width="16" Height="16" Margin="8,7,1,7" VerticalAlignment="Center"
+                   Source="{Binding Icon, RelativeSource={RelativeSource AncestorType=Window}}"/>
+            <TextBlock Grid.Column="1" Padding="5,0" VerticalAlignment="Center" Text="{Binding Path=AppTitle}"/>
+            <Button Grid.Column="2" Click="MinimizeClick" Background="Transparent" Foreground="Gray" BorderBrush="Transparent" Content="ー" x:Name="MinimizeButton"/>
+            <Button Grid.Column="3" Click="MaximizeClick" Background="Transparent" Foreground="Gray" BorderBrush="Transparent" Content="□" x:Name="MaximizeButton"/>
+            <Button Grid.Column="4" Click="CloseClick" Background="Transparent" Foreground="Gray" BorderBrush="Transparent" Content="✕" x:Name="CloseButton"/>
         </Grid>
         
         <!-- メニュー -->

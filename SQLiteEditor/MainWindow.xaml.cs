@@ -2,13 +2,14 @@
 
 using Microsoft.Win32;
 using System;
+using System.Drawing;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace SQLiteEditor
 {
@@ -34,6 +35,10 @@ namespace SQLiteEditor
 
             /* 表示初期化 */
             InitializeComponent();
+            this.Icon = Imaging.CreateBitmapSourceFromHIcon(
+                SystemIcons.Application.Handle,
+                Int32Rect.Empty,
+                BitmapSizeOptions.FromEmptyOptions()) ;
             this.SetTransparency( false );
             MouseLeftButtonDown += ( _, __ ) => { DragMove(); };
 
@@ -374,17 +379,17 @@ namespace SQLiteEditor
         {             
             if( transparent )
             {
-                this.Background = new SolidColorBrush( (Color)ColorConverter.ConvertFromString( "#CFFFFFFF" ) );
-                this.MinimizeButton.Foreground = new SolidColorBrush( (Color)ColorConverter.ConvertFromString( "Gray" ) );
-                this.MaximizeButton.Foreground = new SolidColorBrush( (Color)ColorConverter.ConvertFromString( "Gray" ) );
-                this.CloseButton.Foreground = new SolidColorBrush( (Color)ColorConverter.ConvertFromString( "Gray" ) );
+                this.Background = new SolidColorBrush( (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString( "#CFFFFFFF" ) );
+                this.MinimizeButton.Foreground = System.Windows.Media.Brushes.Gray;
+                this.MaximizeButton.Foreground = System.Windows.Media.Brushes.Gray;
+                this.CloseButton.Foreground = System.Windows.Media.Brushes.Gray;
             }
             else
             {
-                this.Background = new SolidColorBrush( (Color)ColorConverter.ConvertFromString( "White" ) );
-                this.MinimizeButton.Foreground = new SolidColorBrush( (Color)ColorConverter.ConvertFromString( "Black" ) );
-                this.MaximizeButton.Foreground = new SolidColorBrush( (Color)ColorConverter.ConvertFromString( "Black" ) );
-                this.CloseButton.Foreground = new SolidColorBrush( (Color)ColorConverter.ConvertFromString( "Black" ) );
+                this.Background = new SolidColorBrush( (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString( "White" ) );
+                this.MinimizeButton.Foreground = System.Windows.Media.Brushes.Black;
+                this.MaximizeButton.Foreground = System.Windows.Media.Brushes.Black;
+                this.CloseButton.Foreground = System.Windows.Media.Brushes.Black;
             }
         }
 
