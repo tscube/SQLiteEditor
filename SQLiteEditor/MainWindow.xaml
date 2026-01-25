@@ -29,9 +29,9 @@
                 <ColumnDefinition Width="45"/>
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Column="0" Padding="5,0" Text="{Binding Path=AppTitle}"/>
-            <Button Grid.Column="1" Click="MinimizeClick" Background="Transparent" Foreground="Gray" BorderBrush="Transparent" Content="ー"/>
-            <Button Grid.Column="2" Click="MaximizeClick" Background="Transparent" Foreground="Gray" BorderBrush="Transparent" Content="□"/>
-            <Button Grid.Column="3" Click="CloseClick" Background="Transparent" Foreground="Gray" BorderBrush="Transparent" Content="✕"/>
+            <Button Grid.Column="1" Click="MinimizeClick" Background="Transparent" Foreground="Gray" BorderBrush="Transparent" Content="ー" x:Name="MinimizeButton"/>
+            <Button Grid.Column="2" Click="MaximizeClick" Background="Transparent" Foreground="Gray" BorderBrush="Transparent" Content="□" x:Name="MaximizeButton"/>
+            <Button Grid.Column="3" Click="CloseClick" Background="Transparent" Foreground="Gray" BorderBrush="Transparent" Content="✕" x:Name="CloseButton"/>
         </Grid>
         
         <!-- メニュー -->
@@ -50,6 +50,9 @@
                 <MenuItem Header="トリガー一覧(_T)" Click="ShowTriggerList_Click"/>
                 <MenuItem Header="トリガー定義一覧(_T)" Click="ShowTriggerDefinitions_Click"/>
             </MenuItem>
+            <MenuItem Header="表示(_D)">
+                <MenuItem Header="透過表示" Click="Transparency_Click"/>
+            </MenuItem>
             <MenuItem Header="SQL実行(_E)" Click="Execute_Click"/>
         </Menu>
 
@@ -58,7 +61,7 @@
                  AcceptsReturn="True"
                  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
                  FontFamily="MS Gothic" Padding="5,5,0,0"
-                 Background="Transparent" Foreground="Black" FontSize="14"
+                 Background="Transparent" Foreground="Black" FontSize="13"
                  PreviewKeyDown="SqlStmt_PreviewKeyDown"/>
 
         <!-- スプリッター -->
@@ -89,7 +92,7 @@
                     <Setter Property="Background" Value="Transparent"/>
                     <Setter Property="BorderThickness" Value="0,0,1,1"/>
                     <Setter Property="BorderBrush" Value="LightGray"/>
-                    <Setter Property="Padding" Value="2,1"/>
+                    <Setter Property="Padding" Value="5,3"/>
                 </Style>
             </DataGrid.ColumnHeaderStyle>
         </DataGrid>

@@ -8,12 +8,21 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
+using System.Windows.Media;
 
 namespace SQLiteEditor
 {
     public partial class MainWindow : Window
     {
+        /// <summary>
+        /// 表示しているウインドウ数の数
+        /// </summary>
         public static int WindowCount = 0;
+
+        /// <summary>
+        /// SQLエディタ入力時のタブサイズ指定
+        /// </summary>
+        public int TabSize { get; set; } = 4;
 
         /// <summary>
         /// コンストラクタ
@@ -23,7 +32,9 @@ namespace SQLiteEditor
             /* ウインドウ数カウントアップ */
             MainWindow.WindowCount++;
 
+            /* 表示初期化 */
             InitializeComponent();
+            this.SetTransparency( false );
             MouseLeftButtonDown += ( _, __ ) => { DragMove(); };
 
             /* 設定読み込み */
@@ -68,6 +79,11 @@ namespace SQLiteEditor
             }
         }
 
+        /// <summary>
+        /// 最小化ボタンクリック時の処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MaximizeClick( object sender, RoutedEventArgs e )
         {
             if( WindowState == WindowState.Maximized )
@@ -75,10 +91,22 @@ namespace SQLiteEditor
             else
                 WindowState = WindowState.Maximized;
         }
+
+        /// <summary>
+        /// 最大化ボタンクリック時の処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void CloseClick( object sender, RoutedEventArgs e )
         {
             Close();
         }
+
+        /// <summary>
+        /// 閉じるボタンクリック時の処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MinimizeClick( object sender, RoutedEventArgs e )
         {
             WindowState = WindowState.Minimized;
@@ -186,55 +214,6 @@ namespace SQLiteEditor
         }
 
         /// <summary>
-        /// SQL実行ボタンクリック時の処理
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Execute_Click( object sender, RoutedEventArgs e )
-        {
-            if( this.DataContext is MainVM vm )
-            {
-                vm.Execute();
-            }
-        }
-
-        /// <summary>
-        /// テーブル一覧表示メニュークリック時の処理
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ShowTableList_Click( object sender, RoutedEventArgs e )
-        {
-            if( this.DataContext is MainVM vm )
-            {
-                vm.Execute( "select tbl_name from sqlite_master where type = 'table' and tbl_name not like 'sqlite_%' order by tbl_name;" );
-            }
-        }
-        private void ShowTableDefinitions_Click( object sender, RoutedEventArgs e )
-        {
-            if( this.DataContext is MainVM vm )
-            {
-                vm.Execute( "select tbl_name, sql from sqlite_master where type in ( 'table', 'index' ) and tbl_name not like 'sqlite_%' order by tbl_name;" );
-            }
-        }
-
-        private void ShowTriggerList_Click( object sender, RoutedEventArgs e )
-        {
-            if( this.DataContext is MainVM vm )
-            {
-                vm.Execute( "select tbl_name, name from sqlite_master where type = 'trigger' and tbl_name not like 'sqlite_%' order by tbl_name, name;" );
-            }
-        }
-
-        private void ShowTriggerDefinitions_Click( object sender, RoutedEventArgs e )
-        {
-            if( this.DataContext is MainVM vm )
-            {
-                vm.Execute( "select tbl_name, name, sql from sqlite_master where type = 'trigger' and tbl_name not like 'sqlite_%' order by tbl_name, name;" );
-            }
-        }
-
-        /// <summary>
         /// 新規ウィンドウメニュークリック時の処理
         /// </summary>
         /// <param name="sender"></param>
@@ -263,9 +242,90 @@ namespace SQLiteEditor
         }
 
         /// <summary>
-        /// SQLエディタ入力時のタブサイズ指定
+        /// テーブル一覧表示メニュークリック時の処理
         /// </summary>
-        public int TabSize { get; set; } = 4;
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ShowTableList_Click( object sender, RoutedEventArgs e )
+        {
+            if( this.DataContext is MainVM vm )
+            {
+                vm.Execute( "select tbl_name from sqlite_master where type = 'table' and tbl_name not like 'sqlite_%' order by tbl_name;" );
+            }
+        }
+
+        /// <summary>
+        /// テーブル定義一覧表示メニュークリック時の処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ShowTableDefinitions_Click( object sender, RoutedEventArgs e )
+        {
+            if( this.DataContext is MainVM vm )
+            {
+                vm.Execute( "select tbl_name, sql from sqlite_master where type in ( 'table', 'index' ) and tbl_name not like 'sqlite_%' order by tbl_name;" );
+            }
+        }
+
+        /// <summary>
+        /// トリガー一覧表示メニュークリック時の処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ShowTriggerList_Click( object sender, RoutedEventArgs e )
+        {
+            if( this.DataContext is MainVM vm )
+            {
+                vm.Execute( "select tbl_name, name from sqlite_master where type = 'trigger' and tbl_name not like 'sqlite_%' order by tbl_name, name;" );
+            }
+        }
+
+        /// <summary>
+        /// トリガー定義一覧表示メニュークリック時の処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ShowTriggerDefinitions_Click( object sender, RoutedEventArgs e )
+        {
+            if( this.DataContext is MainVM vm )
+            {
+                vm.Execute( "select tbl_name, name, sql from sqlite_master where type = 'trigger' and tbl_name not like 'sqlite_%' order by tbl_name, name;" );
+            }
+        }
+
+        /// <summary>
+        /// 透過表示メニュークリック時の処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Transparency_Click( object sender, RoutedEventArgs e )
+        {
+            if( sender is MenuItem menuItem )
+            {
+                if( menuItem.IsChecked )
+                {
+                    this.SetTransparency( false );
+                }
+                else
+                {
+                    this.SetTransparency( true );
+                }
+                menuItem.IsChecked = !menuItem.IsChecked;
+            }
+        }
+
+        /// <summary>
+        /// SQL実行ボタンクリック時の処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Execute_Click( object sender, RoutedEventArgs e )
+        {
+            if( this.DataContext is MainVM vm )
+            {
+                vm.Execute();
+            }
+        }
 
         /// <summary>
         /// SQLエディタの特定キー押下時の処理
@@ -303,6 +363,28 @@ namespace SQLiteEditor
             else
             {
                 // Do nothing
+            }
+        }
+
+        /// <summary>
+        /// ウインドウの透過表示を設定する
+        /// </summary>
+        /// <param name="transparent">透過表示にする場合はtrue、通常表示にする場合はfalse</param>
+        private void SetTransparency( bool transparent )
+        {             
+            if( transparent )
+            {
+                this.Background = new SolidColorBrush( (Color)ColorConverter.ConvertFromString( "#CFFFFFFF" ) );
+                this.MinimizeButton.Foreground = new SolidColorBrush( (Color)ColorConverter.ConvertFromString( "Gray" ) );
+                this.MaximizeButton.Foreground = new SolidColorBrush( (Color)ColorConverter.ConvertFromString( "Gray" ) );
+                this.CloseButton.Foreground = new SolidColorBrush( (Color)ColorConverter.ConvertFromString( "Gray" ) );
+            }
+            else
+            {
+                this.Background = new SolidColorBrush( (Color)ColorConverter.ConvertFromString( "White" ) );
+                this.MinimizeButton.Foreground = new SolidColorBrush( (Color)ColorConverter.ConvertFromString( "Black" ) );
+                this.MaximizeButton.Foreground = new SolidColorBrush( (Color)ColorConverter.ConvertFromString( "Black" ) );
+                this.CloseButton.Foreground = new SolidColorBrush( (Color)ColorConverter.ConvertFromString( "Black" ) );
             }
         }
 
