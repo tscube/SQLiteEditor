@@ -1,0 +1,15 @@
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+  <Fragment>
+    <ComponentGroup Id="SQLiteEditor" Directory="INSTALLFOLDER">
+      <Component>
+        <File Source="SQLiteEditor.exe" />
+      </Component>
+      <Component>
+        <File Source="SQLiteEditor.exe.config" />
+      </Component>
+      <Component>
+        <File Source="System.Data.SQLite.dll" />
+      </Component>
+	</ComponentGroup>
+  </Fragment>
+</Wix>

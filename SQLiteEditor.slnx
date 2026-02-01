@@ -8,7 +8,7 @@
   <Folder Name="/lib/">
     <File Path="lib/System.Data.SQLite.dll" />
   </Folder>
-  <Project Path="MSI/MSI.wixproj" Type="b7dd6f7e-def8-4e67-b5b7-07ef123db6f0" Id="8da2da38-3ea3-41a6-9ea6-124e66a24e78">
+  <Project Path="Installer/Installer.wixproj" Type="b7dd6f7e-def8-4e67-b5b7-07ef123db6f0" Id="782a0f1f-8b9a-4603-918b-4cde5046e8f6">
     <Platform Solution="*|Any CPU" Project="x64" />
   </Project>
   <Project Path="SQLiteEditor/SQLiteEditor.csproj" Id="a61ee9c3-2965-48ff-a95b-f54da269869d" />
