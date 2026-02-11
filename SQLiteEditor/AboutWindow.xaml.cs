@@ -16,6 +16,7 @@ namespace SQLiteEditor
             this.Title = asm.GetCustomAttribute<AssemblyTitleAttribute>()?.Title ?? asm.GetName().Name;
             this.AppTitle.Content = asm.GetCustomAttribute<AssemblyTitleAttribute>()?.Title ?? asm.GetName().Name;
             this.AppVersion.Content = asm.GetName().Version?.ToString() ?? string.Empty;
+            this.AppCopyright.Content = asm.GetCustomAttribute<AssemblyCopyrightAttribute>()?.Copyright ?? string.Empty;
         }
     }
 }
