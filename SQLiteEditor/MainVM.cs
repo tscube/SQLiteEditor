@@ -125,7 +125,6 @@ namespace SQLiteEditor
         public void Load()
         {
             this.DbFilePath = Properties.Settings.Default.DbFilePath;
-
             this.SqlStmt = Properties.Settings.Default.SqlStmt;
             this.RaisePropertyChanged( nameof( this.SqlStmt ) );
         }

@@ -40,7 +40,6 @@ namespace SQLiteEditor
                 SystemIcons.Application.Handle,
                 Int32Rect.Empty,
                 BitmapSizeOptions.FromEmptyOptions()) ;
-            this.SetTransparency( false );
             MouseLeftButtonDown += ( _, __ ) => { DragMove(); };
 
             /* 設定読み込み */
@@ -64,6 +63,9 @@ namespace SQLiteEditor
                 DWMWINDOWATTRIBUTE.DWMWA_WINDOW_CORNER_PREFERENCE,
                 ref corner,
                 sizeof( int ) );
+
+            /* 透過表示設定 */
+            this.SetTransparency( Properties.Settings.Default.Transparent );
 
             /* パスワードメニューのチェック状態設定 */
             this.PasswordMenu.IsChecked = !string.IsNullOrEmpty( Properties.Settings.Default.Password );
@@ -116,7 +118,7 @@ namespace SQLiteEditor
         /// <param name="e"></param>
         private void CloseClick( object sender, RoutedEventArgs e )
         {
-            Close();
+            this.Close();
         }
 
         /// <summary>
@@ -128,6 +130,10 @@ namespace SQLiteEditor
         {
             WindowState = WindowState.Minimized;
         }
+        private void CloseWindow_Click( object sender, RoutedEventArgs e )
+        {
+            this.Close();
+        }
 
         /// <summary>
         /// 終了メニュークリック時の処理
@@ -136,7 +142,7 @@ namespace SQLiteEditor
         /// <param name="e"></param>
         private void Shutdown_Click( object sender, RoutedEventArgs e )
         {
-            this.Close();
+            Application.Current.Shutdown();
         }
 
         /// <summary>
@@ -327,7 +333,6 @@ namespace SQLiteEditor
                 {
                     this.SetTransparency( true );
                 }
-                menuItem.IsChecked = !menuItem.IsChecked;
             }
         }
 
@@ -388,13 +393,15 @@ namespace SQLiteEditor
         /// </summary>
         /// <param name="transparent">透過表示にする場合はtrue、通常表示にする場合はfalse</param>
         private void SetTransparency( bool transparent )
-        {             
+        {
+            Properties.Settings.Default.Transparent = transparent;
             if( transparent )
             {
                 this.Background = new SolidColorBrush( (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString( "#CFFFFFFF" ) );
                 this.MinimizeButton.Foreground = System.Windows.Media.Brushes.Gray;
                 this.MaximizeButton.Foreground = System.Windows.Media.Brushes.Gray;
                 this.CloseButton.Foreground = System.Windows.Media.Brushes.Gray;
+                this.TransparencyMenu.IsChecked = true;
             }
             else
             {
@@ -402,6 +409,7 @@ namespace SQLiteEditor
                 this.MinimizeButton.Foreground = System.Windows.Media.Brushes.Black;
                 this.MaximizeButton.Foreground = System.Windows.Media.Brushes.Black;
                 this.CloseButton.Foreground = System.Windows.Media.Brushes.Black;
+                this.TransparencyMenu.IsChecked = false;
             }
         }
 

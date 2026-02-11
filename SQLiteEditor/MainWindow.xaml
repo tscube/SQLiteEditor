@@ -43,9 +43,9 @@
                 <MenuItem Header="DBファイル指定(_S)" Click="SelectFilePath_Click"/>
                 <MenuItem Header="DBファイル指定解除(_C)" Click="ClearFilePath_Click"/>
                 <MenuItem Header="DBパスワード(_P)" Click="Password_Click" x:Name="PasswordMenu"/>
-                <MenuItem Header="終了(_X)" Click="Shutdown_Click"/>
+                <MenuItem Header="現在のウインドウを閉じる(_W)" Click="CloseWindow_Click"/>
+                <MenuItem Header="アプリケーション終了(_X)" Click="Shutdown_Click"/>
             </MenuItem>
-            <MenuItem Header="新規ウインドウ(_N)" Click="NewWindow_Click"/>
             <MenuItem Header="情報(_I)">
                 <MenuItem Header="テーブル一覧(_L)" Click="ShowTableList_Click"/>
                 <MenuItem Header="テーブル定義一覧(_D)" Click="ShowTableDefinitions_Click"/>
@@ -53,10 +53,9 @@
                 <MenuItem Header="トリガー一覧(_T)" Click="ShowTriggerList_Click"/>
                 <MenuItem Header="トリガー定義一覧(_T)" Click="ShowTriggerDefinitions_Click"/>
             </MenuItem>
-            <MenuItem Header="表示(_D)">
-                <MenuItem Header="透過表示" Click="Transparency_Click"/>
-            </MenuItem>
             <MenuItem Header="SQL実行(_E)" Click="Execute_Click"/>
+            <MenuItem Header="透過表示(_T)" Click="Transparency_Click" x:Name="TransparencyMenu"/>
+            <MenuItem Header="新規ウインドウ(_N)" Click="NewWindow_Click"/>
         </Menu>
 
         <!-- SQL入力 -->
