@@ -265,6 +265,19 @@ namespace SQLiteEditor
         }
 
         /// <summary>
+        /// Aboutウインドウ表示メニュークリック時の処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ShowAboutWindow_Click( object sender, RoutedEventArgs e )
+        {
+            //AboutWindowを表示する
+            var aboutWindow = new AboutWindow();
+            aboutWindow.Owner = this;
+            aboutWindow.ShowDialog();
+        }
+
+        /// <summary>
         /// テーブル一覧表示メニュークリック時の処理
         /// </summary>
         /// <param name="sender"></param>

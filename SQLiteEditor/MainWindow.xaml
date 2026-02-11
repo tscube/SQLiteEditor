@@ -56,6 +56,7 @@
             <MenuItem Header="SQL実行(_E)" Click="Execute_Click"/>
             <MenuItem Header="透過表示(_T)" Click="Transparency_Click" x:Name="TransparencyMenu"/>
             <MenuItem Header="新規ウインドウ(_N)" Click="NewWindow_Click"/>
+            <MenuItem Header="バージョン情報(_A)" Click="ShowAboutWindow_Click"/>
         </Menu>
 
         <!-- SQL入力 -->

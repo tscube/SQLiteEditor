@@ -1,0 +1,21 @@
+﻿using System.Reflection;
+using System.Windows;
+
+namespace SQLiteEditor
+{
+    /// <summary>
+    /// AboutWindow.xaml の相互作用ロジック
+    /// </summary>
+    public partial class AboutWindow : Window
+    {
+        public AboutWindow()
+        {
+            InitializeComponent();
+
+            Assembly asm = Assembly.GetExecutingAssembly();
+            this.Title = asm.GetCustomAttribute<AssemblyTitleAttribute>()?.Title ?? asm.GetName().Name;
+            this.AppTitle.Content = asm.GetCustomAttribute<AssemblyTitleAttribute>()?.Title ?? asm.GetName().Name;
+            this.AppVersion.Content = asm.GetName().Version?.ToString() ?? string.Empty;
+        }
+    }
+}
