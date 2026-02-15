@@ -1,15 +1,28 @@
 <Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
   <Fragment>
     <ComponentGroup Id="SQLiteEditor" Directory="INSTALLFOLDER">
-      <Component>
-        <File Source="SQLiteEditor.exe" />
+		<Component Id="MainExeComponent" Directory="INSTALLFOLDER" Guid="*">
+			<File Id="MainExeFile" Source="SQLiteEditor.exe" KeyPath="yes" />
       </Component>
-      <Component>
+      <Component Id="ConfigComponent">
         <File Source="SQLiteEditor.exe.config" />
       </Component>
-      <Component>
+      <Component Id="SQLiteDllComponent" >
         <File Source="System.Data.SQLite.dll" />
       </Component>
+
+      <!-- スタートメニューショートカット -->
+      <Component Id="StartMenuShortcutComponent" Directory="ProgramMenuDir" Guid="*">
+	    <Shortcut Id="StartMenuShortcut" Name="SQLiteEditor"
+				  Target="[INSTALLFOLDER]SQLiteEditor.exe" WorkingDirectory="INSTALLFOLDER" >
+		    <ShortcutProperty Key="System.AppUserModel.ID" Value="tanno-seiichi.SQLiteEditor"/>
+		</Shortcut>
+
+		<RemoveFolder Id="RemoveProgramMenuDir" Directory="ProgramMenuDir" On="uninstall" />
+        
+		<RegistryValue Root="HKCU" Key="Software\tanno-seiichi\SQLiteEditor"
+					   Name="StartMenu" Type="integer" Value="1" KeyPath="yes"/>
+      </Component>		
 	</ComponentGroup>
   </Fragment>
 </Wix>
