@@ -9,11 +9,19 @@
         WindowStartupLocation="CenterOwner"
         Title="AboutWindow" Height="150" Width="230">
     <StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center">
-        <Label x:Name="AppTitle" HorizontalAlignment="Center" FontSize="15" Content="AppTitle"/>
+        <Label x:Name="AppTitle" HorizontalAlignment="Center" Padding="0" FontSize="15" Content="AppTitle"/>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-            <Label FontSize="13" Content="Version"/>
-            <Label x:Name="AppVersion" FontSize="13" Content="0.0.0.0"/>
+            <Label FontSize="13" Padding="0" Content="Version"/>
+            <Grid Width="5"/>
+            <Label x:Name="AppVersion" FontSize="13" Padding="0" Content="0.0.0.0"/>
         </StackPanel>
-        <Label x:Name="AppCopyright" HorizontalAlignment="Center" FontSize="12" Content="Copyright"/>
+        <Grid Height="10"/>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+            <Label Padding="0" FontSize="12" Content="by"/>
+            <Grid Width="5"/>
+            <Label x:Name="AppAuthor" HorizontalAlignment="Center" Padding="0" FontSize="12" Content="tanno-seiichi"/>
+        </StackPanel>
+        <Grid Height="2"/>
+        <Label x:Name="AppCopyright" HorizontalAlignment="Center" Padding="0" FontSize="11" Content="Copyright"/>
     </StackPanel>
 </Window>

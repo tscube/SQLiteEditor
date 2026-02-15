@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using System.Windows;
 
 namespace SQLiteEditor
@@ -14,7 +15,8 @@ namespace SQLiteEditor
 
             Assembly asm = Assembly.GetExecutingAssembly();
             this.Title = asm.GetCustomAttribute<AssemblyTitleAttribute>()?.Title ?? asm.GetName().Name;
-            this.AppTitle.Content = asm.GetCustomAttribute<AssemblyTitleAttribute>()?.Title ?? asm.GetName().Name;
+            this.AppTitle.Content = this.Title;
+            this.AppAuthor.Content = asm.GetCustomAttribute<AssemblyCompanyAttribute>()?.Company;
             this.AppVersion.Content = asm.GetName().Version?.ToString() ?? string.Empty;
             this.AppCopyright.Content = asm.GetCustomAttribute<AssemblyCopyrightAttribute>()?.Copyright ?? string.Empty;
         }
